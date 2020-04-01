@@ -2,6 +2,7 @@
 !/.gitignore  # explicitly do not ignore .gitignore
 !/.gitattributes
 data
+saved_models
 __pycache__
 c
 VQAv2
