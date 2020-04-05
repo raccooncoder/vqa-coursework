@@ -16,6 +16,7 @@ from classifier import SimpleClassifier
 from fc import FCNet
 from bc import BCNet
 from counting import Counter
+from transformers import BertModel, BertTokenizer
 
 
 class BanModel(nn.Module):
@@ -44,8 +45,10 @@ class BanModel(nn.Module):
 
         return: logits, not probs
         """
-        w_emb = self.w_emb(q)
-        q_emb = self.q_emb.forward_all(w_emb) # [batch, q_len, q_dim]
+        #w_emb = self.w_emb(q)
+        #q_emb = self.q_emb.forward_all(w_emb) # [batch, q_len, q_dim]
+        w_emb = q
+        q_emb = self.q_emb(w_emb)[0]
         boxes = b[:,:,:4].transpose(1,2)
 
         b_emb = [0] * self.glimpse
@@ -103,8 +106,10 @@ class BanModel_flickr(nn.Module):
 
 
 def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
-    w_emb = WordEmbedding(dataset.dictionary.ntoken, 300, .0, op)
-    q_emb = QuestionEmbedding(300 if 'c' not in op else 600, num_hid, 1, False, .0)
+    #w_emb = WordEmbedding(dataset.dictionary.ntoken, 300, .0, op)
+    #q_emb = QuestionEmbedding(300 if 'c' not in op else 600, num_hid, 1, False, .0)
+    w_emb = BertTokenizer.from_pretrained('bert-base-uncased')
+    q_emb = BertModel.from_pretrained('bert-base-uncased')
     v_att = BiAttention(dataset.v_dim, num_hid, num_hid, gamma)
     if task == 'vqa':
         b_net = []

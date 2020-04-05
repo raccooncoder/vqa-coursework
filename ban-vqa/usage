@@ -1,0 +1,8 @@
+Training:
+
+enter tmux 
+source /home/mshaban/pytorch/bin/activate; CUDA_VISIBLE_DEVICES=2 python3 main.py --use_vg | tee train_log
+
+Validation:
+
+source /home/mshaban/pytorch/bin/activate; CUDA_VISIBLE_DEVICES=2 python3 evaluate.py | tee val_log

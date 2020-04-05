@@ -20,7 +20,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', type=str, default='vqa', help='vqa or flickr')
     parser.add_argument('--epochs', type=int, default=13)
-    parser.add_argument('--num_hid', type=int, default=1280)
+    parser.add_argument('--num_hid', type=int, default=768)
     parser.add_argument('--model', type=str, default='ban')
     parser.add_argument('--op', type=str, default='c')
     parser.add_argument('--gamma', type=int, default=8, help='glimpse')
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         dict = Dictionary.load_from_file(dict_path)
         tfidf, weights = tfidf_from_questions(['train', 'val', 'test2015'], dict)
 
-    model.w_emb.init_embedding(w_emb_path, tfidf, weights)
+    #model.w_emb.init_embedding(w_emb_path, tfidf, weights)
 
     model = nn.DataParallel(model).cuda()
 

@@ -18,6 +18,7 @@ from torch.utils.data import Dataset
 import tools.compute_softscore
 import itertools
 import re
+from transformers import BertModel, BertTokenizer
 
 COUNTING_ONLY = False
 
@@ -335,7 +336,9 @@ class VQAFeatureDataset(Dataset):
         self.label2ans = cPickle.load(open(label2ans_path, 'rb'))
         self.num_ans_candidates = len(self.ans2label)
 
-        self.dictionary = dictionary
+        #self.dictionary = dictionary
+        self.dictionary = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.dictionary.padding_size = 'right'
         self.adaptive = adaptive
 
         self.img_id2idx = cPickle.load(
@@ -363,12 +366,12 @@ class VQAFeatureDataset(Dataset):
         -1 represent nil, and should be treated as padding_idx in embedding
         """
         for entry in self.entries:
-            tokens = self.dictionary.tokenize(entry['question'], False)
-            tokens = tokens[:max_length]
-            if len(tokens) < max_length:
-                # Note here we pad in front of the sentence
-                padding = [self.dictionary.padding_idx] * (max_length - len(tokens))
-                tokens = tokens + padding
+            tokens = self.dictionary.encode(entry['question'], max_length=max_length, pad_to_max_length=True)
+            # tokens = tokens[:max_length]
+            # if len(tokens) < max_length:
+            #     # Note here we pad in front of the sentence
+            #     padding = [self.dictionary.pad_token_idx] * (max_length - len(tokens))
+            #     tokens = tokens + padding
             utils.assert_eq(len(tokens), max_length)
             entry['q_token'] = tokens
 
