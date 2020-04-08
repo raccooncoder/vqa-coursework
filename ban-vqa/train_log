@@ -593,67 +593,67 @@ DataParallel(
 nParams=	144096374
 optim: adamax lr=0.0010, decay_step=2, decay_rate=0.25, grad_clip=0.25
 gradual warmup lr: 0.0005
-epoch 0, time: 1140.49
+epoch 0, time: 1107.98
 	train_loss: 12.82, norm: 31.3004, score: 36.18
 	eval score: 46.26 (92.66)
 	entropy:  1.24 1.93 1.35 1.59 1.46 1.78 2.20 2.06
 gradual warmup lr: 0.0010
-epoch 1, time: 1142.29
+epoch 1, time: 1113.72
 	train_loss: 4.44, norm: 8.1387, score: 45.28
 	eval score: 49.16 (92.66)
 	entropy:  1.88 1.86 1.93 2.08 1.85 1.59 1.88 2.06
 gradual warmup lr: 0.0015
-epoch 2, time: 1141.43
+epoch 2, time: 1111.95
 	train_loss: 4.19, norm: 8.1546, score: 47.49
 	eval score: 50.04 (92.66)
 	entropy:  2.02 2.03 2.05 2.16 2.20 2.01 2.15 1.92
 gradual warmup lr: 0.0020
-epoch 3, time: 1135.13
+epoch 3, time: 1116.20
 	train_loss: 4.20, norm: 47.7089, score: 47.55
 	eval score: 47.69 (92.66)
 	entropy:  1.56 1.44 1.36 1.56 1.77 1.46 1.58 1.86
 lr: 0.0020
-epoch 4, time: 1137.03
+epoch 4, time: 1120.06
 	train_loss: 4.16, norm: 18.7923, score: 47.75
 	eval score: 44.30 (92.66)
 	entropy:  2.35 2.39 2.37 2.34 2.31 2.29 2.41 2.44
 lr: 0.0020
-epoch 5, time: 1137.43
+epoch 5, time: 1120.57
 	train_loss: 4.15, norm: 17.6147, score: 48.10
 	eval score: 29.76 (92.66)
 	entropy:  2.17 2.23 2.16 2.09 2.11 2.10 2.21 2.28
 lr: 0.0020
-epoch 6, time: 1137.30
+epoch 6, time: 1119.44
 	train_loss: 4.14, norm: 17.1237, score: 47.92
 	eval score: 49.71 (92.66)
 	entropy:  2.48 2.50 2.53 2.47 2.47 2.43 2.51 2.52
 lr: 0.0020
-epoch 7, time: 1138.40
+epoch 7, time: 1125.26
 	train_loss: 3.99, norm: 25.8515, score: 49.74
 	eval score: 50.41 (92.66)
 	entropy:  2.25 2.25 2.30 2.26 2.23 2.18 2.24 2.54
 lr: 0.0020
-epoch 8, time: 1138.97
+epoch 8, time: 1114.13
 	train_loss: 3.89, norm: 14.0635, score: 51.09
 	eval score: 52.11 (92.66)
 	entropy:  2.70 2.79 2.82 2.81 2.72 2.72 2.85 2.97
 lr: 0.0020
-epoch 9, time: 1143.36
+epoch 9, time: 1116.89
 	train_loss: 4.86, norm: 5.4709, score: 43.29
 	eval score: 25.48 (92.66)
 	entropy:  4.05 4.30 5.29 4.88 4.53 4.09 4.75 5.33
 decreased lr: 0.0005
-epoch 10, time: 1139.06
+epoch 10, time: 1120.69
 	train_loss: 5.96, norm: 1.1350, score: 33.40
 	eval score: 33.76 (92.66)
 	entropy:  3.93 4.28 5.29 4.90 4.54 4.13 4.77 5.27
 lr: 0.0005
-epoch 11, time: 1137.18
+epoch 11, time: 1116.71
 	train_loss: 5.86, norm: 1.0961, score: 34.18
 	eval score: 33.90 (92.66)
 	entropy:  3.95 4.24 5.29 4.88 4.55 4.24 4.70 5.14
 decreased lr: 0.0001
-epoch 12, time: 1138.26
+epoch 12, time: 1115.35
 	train_loss: 5.79, norm: 1.1042, score: 34.78
 	eval score: 34.02 (92.66)
 	entropy:  3.91 4.18 5.26 4.79 4.47 4.17 4.69 5.14

@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 import utils
 import torch.optim.lr_scheduler as lr_scheduler
+from word2number import w2n
 
 
 def instance_bce_with_logits(logits, labels, reduction='mean'):
@@ -114,17 +115,56 @@ def evaluate(model, dataloader):
     entropy = None
     if hasattr(model.module, 'glimpse'):
         entropy = torch.Tensor(model.module.glimpse).zero_().cuda()
+
+    dct = {'num': [], 
+            'yesno': [],
+            'others': []}
+    
+    label2ans = dataloader.dataset.label2ans
+    for i, ans in enumerate(label2ans):
+        if ans == 'yes' or ans == 'no':
+            dct['yesno'].append(i)
+        else:
+            try:
+                num = w2n.word_to_num(ans)
+                dct['num'].append(i)
+            except:
+                dct['others'].append(i)
+
+    cnt = {'num': 0.0, 'yesno': 0.0, 'others': 0.0}
+    mx = {'num': 0.0, 'yesno': 0.0, 'others': 0.0}
+    
+
     for i, (v, b, q, a) in enumerate(dataloader):
         v = v.cuda()
         b = b.cuda()
         q = q.cuda()
         pred, att = model(v, b, q, None)
-        batch_score = compute_score_with_logits(pred, a.cuda()).sum()
+
+        scores = compute_score_with_logits(pred, a.cuda())
+
+        cnt['num'] += scores[:, dct['num']].sum()
+        cnt['yesno'] += scores[:, dct['yesno']].sum()
+        cnt['others'] += scores[:, dct['others']].sum()
+
+        mx['num'] += (a[:, dct['num']].sum(axis=1) > 0.0).sum()
+        mx['yesno'] += (a[:, dct['yesno']].sum(axis=1) > 0.0).sum()
+        mx['others'] += (a[:, dct['others']].sum(axis=1) > 0.0).sum()
+
+        batch_score = scores.sum()
         score += batch_score.item()
         upper_bound += (a.max(1)[0]).sum().item()
         num_data += pred.size(0)
         if att is not None and 0 < model.module.glimpse:
             entropy += calc_entropy(att.data)[:model.module.glimpse]
+
+    #cnt['num'] = cnt['num'] / len(dataloader.dataset)
+    #cnt['yesno'] = cnt['yesno'] / len(dataloader.dataset)
+    #cnt['others'] = cnt['others'] / len(dataloader.dataset)
+
+    cnt['num'] = cnt['num'] / mx['num']
+    cnt['yesno'] = cnt['yesno'] / mx['yesno']
+    cnt['others'] = cnt['others'] / mx['others']
 
     score = score / len(dataloader.dataset)
     upper_bound = upper_bound / len(dataloader.dataset)
@@ -132,7 +172,7 @@ def evaluate(model, dataloader):
     if entropy is not None:
         entropy = entropy / len(dataloader.dataset)
 
-    return score, upper_bound, entropy
+    return score, upper_bound, entropy, cnt
 
 def calc_entropy(att): # size(att) = [b x g x v x q]
     sizes = att.size()

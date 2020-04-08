@@ -110,6 +110,8 @@ def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
     #q_emb = QuestionEmbedding(300 if 'c' not in op else 600, num_hid, 1, False, .0)
     w_emb = BertTokenizer.from_pretrained('bert-base-uncased')
     q_emb = BertModel.from_pretrained('bert-base-uncased')
+    #for param in q_emb.parameters():
+    #    param.requires_grad = False
     v_att = BiAttention(dataset.v_dim, num_hid, num_hid, gamma)
     if task == 'vqa':
         b_net = []

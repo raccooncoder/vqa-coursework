@@ -17,7 +17,7 @@ import utils
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', type=str, default='vqa', help='vqa or flickr')
-    parser.add_argument('--num_hid', type=int, default=1280)
+    parser.add_argument('--num_hid', type=int, default=768)
     parser.add_argument('--model', type=str, default='ban')
     parser.add_argument('--op', type=str, default='c')
     parser.add_argument('--gamma', type=int, default=8)
@@ -61,9 +61,13 @@ if __name__ == '__main__':
     eval_loader =  DataLoader(eval_dset, batch_size, shuffle=True, num_workers=1, collate_fn=utils.trim_collate)
     model.train(False)
 
-    eval_score, bound, entropy = evaluate(model, eval_loader)
+    eval_score, bound, entropy, cnt = evaluate(model, eval_loader)
     if args.task == 'vqa':
         print('\teval score: %.2f (%.2f)' % (100 * eval_score, 100 * bound))
+
+        for name, score in cnt.items():
+            print('\t{} score: {:.2f}'.format(name, 100 * score))
+
     elif args.task == 'flickr':
         print('\teval score: %.2f/%.2f/%.2f (%.2f)' % (
         100 * eval_score[0], 100 * eval_score[1], 100 * eval_score[2], 100 * bound))
