@@ -16,13 +16,14 @@ from classifier import SimpleClassifier
 from fc import FCNet
 from bc import BCNet
 from counting import Counter
-from transformers import BertModel, BertTokenizer
+from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
 
 
 class BanModel(nn.Module):
-    def __init__(self, dataset, w_emb, q_emb, v_att, b_net, q_prj, c_prj, classifier, counter, op, glimpse):
+    def __init__(self, dataset, params_set, w_emb, q_emb, v_att, b_net, q_prj, c_prj, classifier, counter, op, glimpse):
         super(BanModel, self).__init__()
         self.dataset = dataset
+        self.params_set = params_set
         self.op = op
         self.glimpse = glimpse
         self.w_emb = w_emb
@@ -108,10 +109,11 @@ class BanModel_flickr(nn.Module):
 def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
     #w_emb = WordEmbedding(dataset.dictionary.ntoken, 300, .0, op)
     #q_emb = QuestionEmbedding(300 if 'c' not in op else 600, num_hid, 1, False, .0)
-    w_emb = BertTokenizer.from_pretrained('bert-base-uncased')
-    q_emb = BertModel.from_pretrained('bert-base-uncased')
-    #for param in q_emb.parameters():
-    #    param.requires_grad = False
+    w_emb = RobertaTokenizer.from_pretrained('roberta-base')
+    q_emb = RobertaModel.from_pretrained('roberta-base')
+    params_set = set()
+    for param in q_emb.parameters():
+        params_set.add(param)
     v_att = BiAttention(dataset.v_dim, num_hid, num_hid, gamma)
     if task == 'vqa':
         b_net = []
@@ -125,6 +127,6 @@ def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
         classifier = SimpleClassifier(
             num_hid, num_hid * 2, dataset.num_ans_candidates, .5)
         counter = Counter(objects)
-        return BanModel(dataset, w_emb, q_emb, v_att, b_net, q_prj, c_prj, classifier, counter, op, gamma)
+        return BanModel(dataset, params_set, w_emb, q_emb, v_att, b_net, q_prj, c_prj, classifier, counter, op, gamma)
     elif task == 'flickr':
         return BanModel_flickr(w_emb, q_emb, v_att, op, gamma)

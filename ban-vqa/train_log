@@ -7,12 +7,12 @@ embedding dim is 300
 tf-idf stochastic matrix (19901 x 52602) is generated.
 DataParallel(
   (module): BanModel(
-    (q_emb): BertModel(
-      (embeddings): BertEmbeddings(
-        (word_embeddings): Embedding(30522, 768, padding_idx=0)
-        (position_embeddings): Embedding(512, 768)
-        (token_type_embeddings): Embedding(2, 768)
-        (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+    (q_emb): RobertaModel(
+      (embeddings): RobertaEmbeddings(
+        (word_embeddings): Embedding(50265, 768, padding_idx=1)
+        (position_embeddings): Embedding(514, 768, padding_idx=1)
+        (token_type_embeddings): Embedding(1, 768)
+        (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
         (dropout): Dropout(p=0.1, inplace=False)
       )
       (encoder): BertEncoder(
@@ -27,7 +27,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -36,7 +36,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -50,7 +50,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -59,7 +59,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -73,7 +73,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -82,7 +82,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -96,7 +96,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -105,7 +105,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -119,7 +119,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -128,7 +128,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -142,7 +142,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -151,7 +151,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -165,7 +165,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -174,7 +174,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -188,7 +188,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -197,7 +197,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -211,7 +211,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -220,7 +220,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -234,7 +234,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -243,7 +243,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -257,7 +257,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -266,7 +266,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -280,7 +280,7 @@ DataParallel(
               )
               (output): BertSelfOutput(
                 (dense): Linear(in_features=768, out_features=768, bias=True)
-                (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
                 (dropout): Dropout(p=0.1, inplace=False)
               )
             )
@@ -289,7 +289,7 @@ DataParallel(
             )
             (output): BertOutput(
               (dense): Linear(in_features=3072, out_features=768, bias=True)
-              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
               (dropout): Dropout(p=0.1, inplace=False)
             )
           )
@@ -590,70 +590,70 @@ DataParallel(
     (tanh): Tanh()
   )
 )
-nParams=	144096374
+nParams=	159259766
 optim: adamax lr=0.0010, decay_step=2, decay_rate=0.25, grad_clip=0.25
 gradual warmup lr: 0.0005
-epoch 0, time: 1107.98
-	train_loss: 12.82, norm: 31.3004, score: 36.18
-	eval score: 46.26 (92.66)
-	entropy:  1.24 1.93 1.35 1.59 1.46 1.78 2.20 2.06
+epoch 0, time: 1100.50
+	train_loss: 12.66, norm: 39.5656, score: 35.54
+	eval score: 43.54 (92.66)
+	entropy:  1.45 0.08 0.32 1.56 1.01 0.98 1.63 1.65
 gradual warmup lr: 0.0010
-epoch 1, time: 1113.72
-	train_loss: 4.44, norm: 8.1387, score: 45.28
-	eval score: 49.16 (92.66)
-	entropy:  1.88 1.86 1.93 2.08 1.85 1.59 1.88 2.06
+epoch 1, time: 1115.14
+	train_loss: 4.85, norm: 36.3182, score: 41.86
+	eval score: 47.39 (92.66)
+	entropy:  0.14 0.05 0.21 0.88 1.31 0.11 1.51 0.46
 gradual warmup lr: 0.0015
-epoch 2, time: 1111.95
-	train_loss: 4.19, norm: 8.1546, score: 47.49
-	eval score: 50.04 (92.66)
-	entropy:  2.02 2.03 2.05 2.16 2.20 2.01 2.15 1.92
+epoch 2, time: 1118.61
+	train_loss: 4.40, norm: 33.6577, score: 45.19
+	eval score: 49.21 (92.66)
+	entropy:  0.09 0.03 0.04 0.28 0.78 0.09 1.49 1.50
 gradual warmup lr: 0.0020
-epoch 3, time: 1116.20
-	train_loss: 4.20, norm: 47.7089, score: 47.55
-	eval score: 47.69 (92.66)
-	entropy:  1.56 1.44 1.36 1.56 1.77 1.46 1.58 1.86
+epoch 3, time: 1113.29
+	train_loss: 4.18, norm: 30.4612, score: 47.26
+	eval score: 50.52 (92.66)
+	entropy:  0.12 0.04 0.04 0.54 0.11 0.08 1.48 0.96
 lr: 0.0020
-epoch 4, time: 1120.06
-	train_loss: 4.16, norm: 18.7923, score: 47.75
-	eval score: 44.30 (92.66)
-	entropy:  2.35 2.39 2.37 2.34 2.31 2.29 2.41 2.44
+epoch 4, time: 1119.80
+	train_loss: 4.00, norm: 22.5814, score: 49.28
+	eval score: 52.40 (92.66)
+	entropy:  0.32 0.11 0.17 0.63 0.29 0.26 1.66 1.29
 lr: 0.0020
-epoch 5, time: 1120.57
-	train_loss: 4.15, norm: 17.6147, score: 48.10
-	eval score: 29.76 (92.66)
-	entropy:  2.17 2.23 2.16 2.09 2.11 2.10 2.21 2.28
+epoch 5, time: 1110.93
+	train_loss: 3.84, norm: 14.0892, score: 51.51
+	eval score: 54.40 (92.66)
+	entropy:  3.17 0.76 1.70 2.75 2.61 2.70 4.21 3.90
 lr: 0.0020
-epoch 6, time: 1119.44
-	train_loss: 4.14, norm: 17.1237, score: 47.92
-	eval score: 49.71 (92.66)
-	entropy:  2.48 2.50 2.53 2.47 2.47 2.43 2.51 2.52
+epoch 6, time: 1107.25
+	train_loss: 3.66, norm: 11.6521, score: 54.15
+	eval score: 56.56 (92.66)
+	entropy:  3.77 0.98 2.41 3.16 3.19 3.27 4.58 4.54
 lr: 0.0020
-epoch 7, time: 1125.26
-	train_loss: 3.99, norm: 25.8515, score: 49.74
-	eval score: 50.41 (92.66)
-	entropy:  2.25 2.25 2.30 2.26 2.23 2.18 2.24 2.54
+epoch 7, time: 1115.84
+	train_loss: 3.53, norm: 11.9390, score: 56.58
+	eval score: 58.44 (92.66)
+	entropy:  3.71 0.82 2.35 2.89 2.88 3.32 4.58 4.51
 lr: 0.0020
-epoch 8, time: 1114.13
-	train_loss: 3.89, norm: 14.0635, score: 51.09
-	eval score: 52.11 (92.66)
-	entropy:  2.70 2.79 2.82 2.81 2.72 2.72 2.85 2.97
+epoch 8, time: 1119.18
+	train_loss: 3.42, norm: 11.9496, score: 58.46
+	eval score: 59.64 (92.66)
+	entropy:  3.73 0.80 2.15 2.80 2.81 3.38 4.45 4.54
 lr: 0.0020
-epoch 9, time: 1116.89
-	train_loss: 4.86, norm: 5.4709, score: 43.29
-	eval score: 25.48 (92.66)
-	entropy:  4.05 4.30 5.29 4.88 4.53 4.09 4.75 5.33
+epoch 9, time: 1114.22
+	train_loss: 3.34, norm: 12.0959, score: 59.93
+	eval score: 60.51 (92.66)
+	entropy:  3.64 0.77 2.31 2.79 2.77 3.19 4.36 4.53
 decreased lr: 0.0005
-epoch 10, time: 1120.69
-	train_loss: 5.96, norm: 1.1350, score: 33.40
-	eval score: 33.76 (92.66)
-	entropy:  3.93 4.28 5.29 4.90 4.54 4.13 4.77 5.27
+epoch 10, time: 1120.56
+	train_loss: 3.16, norm: 11.7038, score: 62.65
+	eval score: 61.69 (92.66)
+	entropy:  3.76 0.76 2.25 2.81 2.83 3.28 4.36 4.47
 lr: 0.0005
-epoch 11, time: 1116.71
-	train_loss: 5.86, norm: 1.0961, score: 34.18
-	eval score: 33.90 (92.66)
-	entropy:  3.95 4.24 5.29 4.88 4.55 4.24 4.70 5.14
+epoch 11, time: 1113.10
+	train_loss: 3.11, norm: 11.8036, score: 63.50
+	eval score: 62.01 (92.66)
+	entropy:  3.78 0.79 2.19 2.87 2.84 3.45 4.50 4.53
 decreased lr: 0.0001
-epoch 12, time: 1115.35
-	train_loss: 5.79, norm: 1.1042, score: 34.78
-	eval score: 34.02 (92.66)
-	entropy:  3.91 4.18 5.26 4.79 4.47 4.17 4.69 5.14
+epoch 12, time: 1114.89
+	train_loss: 3.05, norm: 11.6210, score: 64.39
+	eval score: 62.22 (92.66)
+	entropy:  3.78 0.76 2.23 2.80 2.81 3.39 4.48 4.50

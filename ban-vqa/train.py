@@ -39,7 +39,12 @@ def train(model, train_loader, eval_loader, num_epochs, output, opt=None, s_epoc
     grad_clip = .25
 
     utils.create_dir(output)
-    optim = torch.optim.Adamax(filter(lambda p: p.requires_grad, model.parameters()), lr=lr_default) \
+    param_list = [
+        #{"params": model.module.q_emb.parameters(), "lr": 2e-4},
+        {"params": filter(lambda p: p not in model.module.params_set, model.parameters())}
+        ]
+
+    optim = torch.optim.Adamax(param_list, lr=lr_default) \
         if opt is None else opt
     logger = utils.Logger(os.path.join(output, 'log.txt'))
     best_eval_score = 0
@@ -64,7 +69,7 @@ def train(model, train_loader, eval_loader, num_epochs, output, opt=None, s_epoc
         else:
             logger.write('lr: %.4f' % optim.param_groups[0]['lr'])
 
-        for i, (v, b, q, a) in enumerate(train_loader):
+        for i, (v, b, q, a, q_id) in enumerate(train_loader):
             v = v.cuda()
             b = b.cuda()
             q = q.cuda()
@@ -86,7 +91,7 @@ def train(model, train_loader, eval_loader, num_epochs, output, opt=None, s_epoc
         train_score = 100 * train_score / N
         if None != eval_loader:
             model.train(False)
-            eval_score, bound, entropy = evaluate(model, eval_loader)
+            eval_score, bound, entropy, _ = evaluate(model, eval_loader)
             model.train(True)
 
         logger.write('epoch %d, time: %.2f' % (epoch, time.time()-t))
@@ -135,11 +140,15 @@ def evaluate(model, dataloader):
     mx = {'num': 0.0, 'yesno': 0.0, 'others': 0.0}
     
 
-    for i, (v, b, q, a) in enumerate(dataloader):
+    for i, (v, b, q, a, q_id) in enumerate(dataloader):
         v = v.cuda()
         b = b.cuda()
         q = q.cuda()
         pred, att = model(v, b, q, None)
+
+        with open('pred_dump.txt', 'a') as f:
+            for cur_id, cur_label in zip(q_id, torch.max(pred, 1)[1].data):
+                f.write('{} {}\n'.format(cur_id, label2ans[cur_label]))
 
         scores = compute_score_with_logits(pred, a.cuda())
 

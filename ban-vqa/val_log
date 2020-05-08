@@ -1,7 +1,7 @@
 Evaluate a given model optimized by training split using validation split.
 loading dictionary from data/dictionary.pkl
 loading features from h5 file
-	eval score: 60.18 (92.66)
-	num score: 41.30
-	yesno score: 72.93
-	others score: 50.06
+	eval score: 61.74 (92.66)
+	num score: 43.26
+	yesno score: 73.52
+	others score: 52.13

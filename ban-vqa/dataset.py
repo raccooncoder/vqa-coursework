@@ -18,7 +18,7 @@ from torch.utils.data import Dataset
 import tools.compute_softscore
 import itertools
 import re
-from transformers import BertModel, BertTokenizer
+from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
 
 COUNTING_ONLY = False
 
@@ -337,7 +337,7 @@ class VQAFeatureDataset(Dataset):
         self.num_ans_candidates = len(self.ans2label)
 
         #self.dictionary = dictionary
-        self.dictionary = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.dictionary = RobertaTokenizer.from_pretrained('roberta-base')
         self.dictionary.padding_size = 'right'
         self.adaptive = adaptive
 
@@ -414,7 +414,7 @@ class VQAFeatureDataset(Dataset):
             target = torch.zeros(self.num_ans_candidates)
             if labels is not None:
                 target.scatter_(0, labels, scores)
-            return features, spatials, question, target
+            return features, spatials, question, target, question_id
         else:
             return features, spatials, question, question_id
 
