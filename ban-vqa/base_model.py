@@ -16,7 +16,7 @@ from classifier import SimpleClassifier
 from fc import FCNet
 from bc import BCNet
 from counting import Counter
-from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
+from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer, AlbertModel, AlbertTokenizer
 
 
 class BanModel(nn.Module):
@@ -37,7 +37,7 @@ class BanModel(nn.Module):
         self.drop = nn.Dropout(.5)
         self.tanh = nn.Tanh()
 
-    def forward(self, v, b, q, labels):
+    def forward(self, v, b, q, labels=None):
         """Forward
 
         v: [batch, num_objs, obj_dim]
@@ -50,7 +50,9 @@ class BanModel(nn.Module):
         #q_emb = self.q_emb.forward_all(w_emb) # [batch, q_len, q_dim]
         w_emb = q
         q_emb = self.q_emb(w_emb)[0]
-        boxes = b[:,:,:4].transpose(1,2)
+
+        if self.counter is not None:
+            boxes = b[:,:,:4].transpose(1,2)
 
         b_emb = [0] * self.glimpse
         att, logits = self.v_att.forward_all(v, q_emb) # b x g x v x q
@@ -59,10 +61,12 @@ class BanModel(nn.Module):
             b_emb[g] = self.b_net[g].forward_with_weights(v, q_emb, att[:,g,:,:]) # b x l x h
             
             atten, _ = logits[:,g,:,:].max(2)
-            embed = self.counter(boxes, atten)
-
+                
             q_emb = self.q_prj[g](b_emb[g].unsqueeze(1)) + q_emb
-            q_emb = q_emb + self.c_prj[g](embed).unsqueeze(1)
+            
+            if self.counter is not None:
+                embed = self.counter(boxes, atten)
+                q_emb = q_emb + self.c_prj[g](embed).unsqueeze(1)
 
         logits = self.classifier(q_emb.sum(1))
 
@@ -106,14 +110,15 @@ class BanModel_flickr(nn.Module):
         return None, att
 
 
-def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
+def build_ban(dataset, num_hid, op='', gamma=4, task='vqa', use_counter=True):
     #w_emb = WordEmbedding(dataset.dictionary.ntoken, 300, .0, op)
     #q_emb = QuestionEmbedding(300 if 'c' not in op else 600, num_hid, 1, False, .0)
-    w_emb = RobertaTokenizer.from_pretrained('roberta-base')
-    q_emb = RobertaModel.from_pretrained('roberta-base')
+    w_emb = AlbertTokenizer.from_pretrained('albert-large-v2')
+    q_emb = AlbertModel.from_pretrained('albert-large-v2')
     params_set = set()
     for param in q_emb.parameters():
-        params_set.add(param)
+         params_set.add(param)
+         param.requires_grad = False
     v_att = BiAttention(dataset.v_dim, num_hid, num_hid, gamma)
     if task == 'vqa':
         b_net = []
@@ -126,7 +131,7 @@ def build_ban(dataset, num_hid, op='', gamma=4, task='vqa'):
             c_prj.append(FCNet([objects + 1, num_hid], 'ReLU', .0))
         classifier = SimpleClassifier(
             num_hid, num_hid * 2, dataset.num_ans_candidates, .5)
-        counter = Counter(objects)
+        counter = Counter(objects) if use_counter else None
         return BanModel(dataset, params_set, w_emb, q_emb, v_att, b_net, q_prj, c_prj, classifier, counter, op, gamma)
     elif task == 'flickr':
         return BanModel_flickr(w_emb, q_emb, v_att, op, gamma)

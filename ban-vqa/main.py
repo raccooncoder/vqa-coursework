@@ -20,12 +20,14 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', type=str, default='vqa', help='vqa or flickr')
     parser.add_argument('--epochs', type=int, default=13)
-    parser.add_argument('--num_hid', type=int, default=768)
+    parser.add_argument('--num_hid', type=int, default=1024)
     parser.add_argument('--model', type=str, default='ban')
     parser.add_argument('--op', type=str, default='c')
     parser.add_argument('--gamma', type=int, default=8, help='glimpse')
     parser.add_argument('--use_both', action='store_true', help='use both train/val datasets to train?')
     parser.add_argument('--use_vg', action='store_true', help='use visual genome dataset to train?')
+    parser.add_argument('--use_counter', action='store_true', help='use counter module?')
+    parser.add_argument('--unadaptive', action='store_false', help='use unadaptive features?')
     parser.add_argument('--tfidf', action='store_false', help='tfidf word embedding?')
     parser.add_argument('--input', type=str, default=None)
     parser.add_argument('--output', type=str, default='saved_models/ban')
@@ -46,8 +48,8 @@ if __name__ == '__main__':
         from train import train
         dict_path = 'data/dictionary.pkl'
         dictionary = Dictionary.load_from_file(dict_path)
-        train_dset = VQAFeatureDataset('train', dictionary, adaptive=True)
-        val_dset = VQAFeatureDataset('val', dictionary, adaptive=True)
+        train_dset = VQAFeatureDataset('train', dictionary, adaptive=args.unadaptive, use_counter=args.use_counter)
+        val_dset = VQAFeatureDataset('val', dictionary, adaptive=args.unadaptive, use_counter=args.use_counter)
         w_emb_path = 'data/glove6b_init_300d.npy'
 
     elif args.task == 'flickr':
@@ -68,7 +70,7 @@ if __name__ == '__main__':
     batch_size = args.batch_size
 
     constructor = 'build_%s' % args.model
-    model = getattr(base_model, constructor)(train_dset, args.num_hid, args.op, args.gamma, args.task).cuda()
+    model = getattr(base_model, constructor)(train_dset, args.num_hid, args.op, args.gamma, args.task, args.use_counter).cuda()
 
 
     tfidf = None

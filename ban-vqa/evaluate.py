@@ -17,10 +17,12 @@ import utils
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', type=str, default='vqa', help='vqa or flickr')
-    parser.add_argument('--num_hid', type=int, default=768)
+    parser.add_argument('--num_hid', type=int, default=1024)
     parser.add_argument('--model', type=str, default='ban')
     parser.add_argument('--op', type=str, default='c')
     parser.add_argument('--gamma', type=int, default=8)
+    parser.add_argument('--use_counter', action='store_true', help='use counter module?')
+    parser.add_argument('--unadaptive', action='store_false', help='use unadaptive features?')
     parser.add_argument('--input', type=str, default='saved_models/ban')
     parser.add_argument('--epoch', type=int, default=12)
     parser.add_argument('--batch_size', type=int, default=256)
@@ -38,7 +40,7 @@ if __name__ == '__main__':
         from train import evaluate
         dict_path = 'data/dictionary.pkl'
         dictionary = Dictionary.load_from_file(dict_path)
-        eval_dset = VQAFeatureDataset('val', dictionary, adaptive=True)
+        eval_dset = VQAFeatureDataset('val', dictionary, adaptive=args.unadaptive, use_counter=args.use_counter)
 
     elif args.task == 'flickr':
         from train_flickr import evaluate
@@ -52,7 +54,7 @@ if __name__ == '__main__':
     batch_size = args.batch_size * n_device
 
     constructor = 'build_%s' % args.model
-    model = getattr(base_model, constructor)(eval_dset, args.num_hid, args.op, args.gamma, args.task).cuda()
+    model = getattr(base_model, constructor)(eval_dset, args.num_hid, args.op, args.gamma, args.task, args.use_counter).cuda()
     model_data = torch.load(args.input+'/model'+('_epoch%d' % args.epoch if 0 < args.epoch else '')+'.pth')
 
     model = nn.DataParallel(model).cuda()

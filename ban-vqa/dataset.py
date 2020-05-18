@@ -18,7 +18,7 @@ from torch.utils.data import Dataset
 import tools.compute_softscore
 import itertools
 import re
-from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
+from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer, AlbertModel, AlbertTokenizer
 
 COUNTING_ONLY = False
 
@@ -326,7 +326,7 @@ def _create_flickr_entry(img, sentence, entity_indices, target_indices, entity_i
 
 
 class VQAFeatureDataset(Dataset):
-    def __init__(self, name, dictionary, dataroot='data', adaptive=False):
+    def __init__(self, name, dictionary, dataroot='data', adaptive=False, use_counter=True):
         super(VQAFeatureDataset, self).__init__()
         assert name in ['train', 'val', 'test-dev2015', 'test2015']
 
@@ -335,29 +335,33 @@ class VQAFeatureDataset(Dataset):
         self.ans2label = cPickle.load(open(ans2label_path, 'rb'))
         self.label2ans = cPickle.load(open(label2ans_path, 'rb'))
         self.num_ans_candidates = len(self.ans2label)
+        self.use_counter= use_counter
 
         #self.dictionary = dictionary
-        self.dictionary = RobertaTokenizer.from_pretrained('roberta-base')
-        self.dictionary.padding_size = 'right'
+        self.dictionary = AlbertTokenizer.from_pretrained('albert-large-v2')
         self.adaptive = adaptive
 
         self.img_id2idx = cPickle.load(
-            open(os.path.join(dataroot, '%s%s_imgid2idx.pkl' % (name, '' if self.adaptive else '36')), 'rb'))
+            open(os.path.join(dataroot, '%s%s_imgid2idx.pkl' % (name, '' if self.adaptive else '')), 'rb'))
         
-        h5_path = os.path.join(dataroot, '%s%s.hdf5' % (name, '' if self.adaptive else '36'))
+        h5_path = os.path.join(dataroot, '%s%s.hdf5' % (name, '' if self.adaptive else ''))
 
+        
         print('loading features from h5 file')    
-        with h5py.File(h5_path, 'r') as hf:
-            self.features = np.array(hf.get('image_features'))
-            self.spatials = np.array(hf.get('spatial_features'))
-            if self.adaptive:
-                self.pos_boxes = np.array(hf.get('pos_boxes'))
+        hf = h5py.File(h5_path, 'r')
+
+        self.features = hf.get('image_features')
+        if self.use_counter:
+            self.spatials = hf.get('spatial_features')
+        if self.adaptive:
+            self.pos_boxes = hf.get('pos_boxes')
 
         self.entries = _load_dataset(dataroot, name, self.img_id2idx, self.label2ans)
         self.tokenize()
         self.tensorize()
-        self.v_dim = self.features.size(1 if self.adaptive else 2)
-        self.s_dim = self.spatials.size(1 if self.adaptive else 2)
+        self.v_dim = self.features.shape[1 if self.adaptive else 1]
+        if self.use_counter:
+            self.s_dim = self.spatials.shape[1 if self.adaptive else 2]
 
     def tokenize(self, max_length=14):
         """Tokenizes the questions.
@@ -367,17 +371,19 @@ class VQAFeatureDataset(Dataset):
         """
         for entry in self.entries:
             tokens = self.dictionary.encode(entry['question'], max_length=max_length, pad_to_max_length=True)
+            # tokens = self.dictionary.tokenize(entry['question'], False)
             # tokens = tokens[:max_length]
             # if len(tokens) < max_length:
             #     # Note here we pad in front of the sentence
-            #     padding = [self.dictionary.pad_token_idx] * (max_length - len(tokens))
+            #     padding = [self.dictionary.padding_idx] * (max_length - len(tokens))
             #     tokens = tokens + padding
             utils.assert_eq(len(tokens), max_length)
             entry['q_token'] = tokens
 
     def tensorize(self):
-        self.features = torch.from_numpy(self.features)
-        self.spatials = torch.from_numpy(self.spatials)
+        #self.features = torch.from_numpy(self.features)
+        #if self.use_counter:
+        #    self.spatials = torch.from_numpy(self.spatials)
 
         for entry in self.entries:
             question = torch.from_numpy(np.array(entry['q_token']))
@@ -398,12 +404,15 @@ class VQAFeatureDataset(Dataset):
 
     def __getitem__(self, index):
         entry = self.entries[index]
+        spatials = 0
         if not self.adaptive:
-            features = self.features[entry['image']]
-            spatials = self.spatials[entry['image']]
+            features = torch.from_numpy(self.features[100 * entry['image']: 100 * entry['image'] + 100, :])
+            if self.use_counter:
+                spatials = torch.from_numpy(self.spatials[entry['image']])
         else:
-            features = self.features[self.pos_boxes[entry['image']][0]:self.pos_boxes[entry['image']][1],:]
-            spatials = self.spatials[self.pos_boxes[entry['image']][0]:self.pos_boxes[entry['image']][1],:]
+            features = torch.from_numpy(self.features[self.pos_boxes[entry['image']][0]:self.pos_boxes[entry['image']][1],:])
+            if self.use_counter:
+                spatials = torch.from_numpy(self.spatials[self.pos_boxes[entry['image']][0]:self.pos_boxes[entry['image']][1],:])
 
         question = entry['q_token']
         question_id = entry['question_id']
